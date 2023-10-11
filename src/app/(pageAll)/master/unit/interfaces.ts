@@ -3,6 +3,8 @@ export interface unitInterface {
 	unit: string;
 	status: string;
 	timestamps?: string;
+	message?: string;
+	data?: [];
 	action?: JSX.Element | JSX.Element[];
 }
 export interface Column {

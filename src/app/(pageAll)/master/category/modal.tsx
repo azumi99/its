@@ -7,33 +7,35 @@ import {
 	Button,
 	SelectChangeEvent,
 	Typography,
+	Box,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import {
 	showErrorToast,
 	showSuccessToast,
-} from "../components/toast/ToastComponenet";
-import { unitInterface } from "./interfaces";
-import { unitDelete, unitModal, unitStore, unitUpdate } from "./services";
+} from "@/app/(pageAll)/components/toast/ToastComponenet";
+import { categoryInterface } from "./interfaces";
+import {
+	categoryDelete,
+	categoryModal,
+	categoryStore,
+	categoryUpdate,
+} from "./services";
 
-type UnityModal = {
+type Modal = {
 	handleClose: () => void;
 	dataPage: () => void;
 	idModal: string;
 };
-const ModalUnit: React.FC<UnityModal> = ({
-	handleClose,
-	dataPage,
-	idModal,
-}) => {
-	const [value, setValue] = useState("");
-	const [unitValue, setUnit] = useState("");
+const ModalUnit: React.FC<Modal> = ({ handleClose, dataPage, idModal }) => {
+	const [status, setStatus] = useState("");
+	const [category, setCategory] = useState("");
 
 	const handleChange = (event: SelectChangeEvent) => {
-		setValue(event.target.value as string);
+		setStatus(event.target.value as string);
 	};
-	const handleUnit = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setUnit(event.target.value as string);
+	const handleCategory = (event: React.ChangeEvent<HTMLInputElement>) => {
+		setCategory(event.target.value.toUpperCase() as string);
 	};
 	const successFunc = (message: string) => {
 		showSuccessToast(message);
@@ -42,79 +44,81 @@ const ModalUnit: React.FC<UnityModal> = ({
 	const failFunc = (message: string) => {
 		showErrorToast(message);
 	};
-	const saveUnit = async () => {
-		const param: unitInterface = {
-			unit: unitValue,
-			status: value,
+	const saveCategory = async () => {
+		const param: categoryInterface = {
+			category: category,
+			status: status,
 		};
 		try {
-			await unitStore(param, successFunc, failFunc);
+			await categoryStore(param, successFunc, failFunc);
 		} catch (error) {
 			console.log("error");
 		}
 	};
-	const editUnit = async () => {
-		const param: unitInterface = {
+	const editCategory = async () => {
+		const param: categoryInterface = {
 			id: idModal,
-			unit: unitValue,
-			status: value,
+			category: category,
+			status: status,
 		};
 		try {
-			await unitUpdate(param, successFunc, failFunc);
+			await categoryUpdate(param, successFunc, failFunc);
 		} catch (error) {
 			console.log("error data unit");
 		}
 	};
-	const dataUnit = async () => {
+	const dataCategory = async () => {
 		try {
-			const datas = await unitModal(idModal);
-			setUnit(datas.data[0].unit);
-			console.log(unitValue);
-			setValue(datas.data[0].status);
+			const datas = await categoryModal(idModal);
+			setCategory(datas.data[0].category);
+			setStatus(datas.data[0].status);
 		} catch (error) {
 			console.log("error data unit");
 		}
 	};
 	const handleSaveClick = async () => {
 		if (idModal) {
-			await editUnit();
+			await editCategory();
 		} else {
-			await saveUnit();
+			await saveCategory();
 		}
 		dataPage();
 	};
 	useEffect(() => {
-		dataUnit();
+		dataCategory();
 	}, []);
 
 	return (
 		<>
-			<FormControl fullWidth>
-				<TextField
-					required
-					id="unit"
-					label="Unit"
-					type="search"
-					value={unitValue}
-					style={{ marginBottom: "20px" }}
-					onChange={handleUnit}
-					fullWidth
-				/>
-			</FormControl>
-			<FormControl fullWidth>
-				<InputLabel id="demo-simple-select-label">Status</InputLabel>
-				<Select
-					required
-					labelId="demo-simple-select-label"
-					id="demo-simple-select"
-					value={value}
-					label="Status"
-					onChange={handleChange}
-				>
-					<MenuItem value={1}>Active</MenuItem>
-					<MenuItem value={0}>Inactive</MenuItem>
-				</Select>
-			</FormControl>
+			<div>
+				<FormControl fullWidth>
+					<TextField
+						required
+						id="category"
+						label="Category"
+						value={category}
+						style={{ marginBottom: "20px" }}
+						onChange={handleCategory}
+					/>
+				</FormControl>
+			</div>
+			<div>
+				<FormControl fullWidth>
+					<InputLabel id="demo-simple-select-label">Status</InputLabel>
+					<Select
+						required
+						labelId="demo-simple-select-label"
+						id="demo-simple-select"
+						value={status}
+						label="Status"
+						onChange={handleChange}
+					>
+						<MenuItem value={1}>Active</MenuItem>
+						<MenuItem value={0}>Inactive</MenuItem>
+					</Select>
+				</FormControl>
+			</div>
+
 			<div style={{ marginTop: 20, textAlign: "right" }}>
 				<Button
 					style={{ margin: 3 }}
@@ -160,7 +164,7 @@ const DeleteModal: React.FC<ModalDelete> = ({
 	};
 	const handleClick = async () => {
 		try {
-			await unitDelete(idModal, successFunc, failFunc);
+			await categoryDelete(idModal, successFunc, failFunc);
 		} catch (error) {}
 		dataPage();
 	};

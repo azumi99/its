@@ -43,6 +43,7 @@ export default function RootLayout({
 			setSize(window.innerWidth);
 		};
 		window.addEventListener("resize", handleResize);
+		setSize(window.innerWidth);
 	}, [loading]);
 
 	return (

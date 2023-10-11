@@ -3,7 +3,7 @@ import { Button, ButtonGroup, Chip, TextField, Tooltip } from "@mui/material";
 import PageContainer from "@/app/(pageAll)/components/container/PageContainer";
 import DashboardCard from "@/app/(pageAll)/components/shared/DashboardCard";
 import { useEffect, useState } from "react";
-import { unitServices } from "./services";
+import { categoryServices } from "./services";
 import React from "react";
 import { IconPencil, IconTrash } from "@tabler/icons-react";
 import { TableComponenent } from "@/app/(pageAll)/components/table/page";
@@ -12,25 +12,25 @@ import { styleModal } from "@/app/(pageAll)/components/modal/style";
 import ModalPage from "@/app/(pageAll)/components/modal/modalPage";
 import { DeleteModal, ModalUnit } from "./modal";
 
-const UnitPage = () => {
-	const [unit, setUnit] = useState([]);
+const CategoryPage = () => {
+	const [category, setCategory] = useState([]);
 	const [searchValue, setSearchValue] = useState("");
 	const [modal, setModal] = useState(false);
 	const [titleModal, setTitle] = useState("");
 	const handleOpen = () => setModal(true);
 	const closeHandle = () => setModal(false);
 	const [element, setElement] = useState<JSX.Element | JSX.Element[]>(<></>);
-	function createData(id: string, unit: string, status: string): Data {
-		return { id, unit, status };
+	function createData(id: string, category: string, status: string): Data {
+		return { id, category, status };
 	}
 
 	const handleEdit = (value: any) => {
-		setTitle("Edit Unit");
-		addCategory(value);
+		setTitle("Edit Vendor");
+		addModal(value);
 	};
 	const handleAdd = () => {
-		setTitle("Add Unit");
-		addCategory();
+		setTitle("Add Vendor");
+		addModal();
 	};
 	const handleDelete = (value: any) => {
 		setTitle("");
@@ -38,7 +38,7 @@ const UnitPage = () => {
 	};
 
 	const columns: readonly Column[] = [
-		{ id: "unit", label: "Unit" },
+		{ id: "category", label: "Category" },
 		{
 			id: "status",
 			label: "Status",
@@ -86,16 +86,17 @@ const UnitPage = () => {
 		},
 	];
 
-	const rows = unit.map((value: Data) =>
-		createData(value.id, value.unit, value.status)
+	const rows = category.map((value: Data) =>
+		createData(value.id, value.category, value.status)
 	);
 
 	const dataPage = async () => {
 		try {
-			const value = await unitServices();
-			setUnit(value.data);
+			const value = await categoryServices();
+			setCategory(value.data);
 		} catch (error) {
-			setUnit([]);
+			setCategory([]);
+			location.reload();
 		}
 	};
 	useEffect(() => {
@@ -103,13 +104,9 @@ const UnitPage = () => {
 	}, []);
 
 	const filteredRows = rows.filter((row) => {
-		return (
-			row.unit.toLowerCase().includes(searchValue.toLowerCase()) ||
-			(typeof row.status === "string" &&
-				row.status.toLowerCase().includes(searchValue.toLowerCase()))
-		);
+		return row.category.toLowerCase().includes(searchValue.toLowerCase());
 	});
-	const addCategory = (value?: any) => {
+	const addModal = (value?: any) => {
 		setElement(
 			<>
 				<ModalUnit
@@ -135,14 +132,15 @@ const UnitPage = () => {
 		handleOpen();
 	};
 	return (
-		<PageContainer title="Unit" description="Unit page">
-			<DashboardCard title="Unit List">
+		<PageContainer title="Category" description="Category page">
+			<DashboardCard title="Category List">
 				<ModalPage
 					handleClose={closeHandle}
 					modalElement={element}
 					open={modal}
 					style={styleModal}
 					title={titleModal}
+					sizeModal={400}
 				/>
 				<div
 					style={{
@@ -172,4 +170,4 @@ const UnitPage = () => {
 	);
 };
 
-export default UnitPage;
+export default CategoryPage;

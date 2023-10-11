@@ -8,14 +8,13 @@ import {
 	TableBody,
 	TablePagination,
 } from "@mui/material";
-import page from "../../page";
 import { useState } from "react";
-import { Column, Data } from "../../unit/interfaces";
+// import { Column, Data } from "../../unit/interfaces";
 
 type Props = {
-	columns: readonly Column[];
-	filteredRows: Data[];
-	rows: Data[];
+	columns: any;
+	filteredRows: any;
+	rows: any;
 };
 const TableComponenent: React.FC<Props> = ({ columns, filteredRows, rows }) => {
 	const [page, setPage] = useState(0);
@@ -39,7 +38,7 @@ const TableComponenent: React.FC<Props> = ({ columns, filteredRows, rows }) => {
 				<Table>
 					<TableHead>
 						<TableRow>
-							{columns.map((column) => (
+							{columns.map((column: any) => (
 								<TableCell
 									key={column.id}
 									align={column.align}
@@ -53,10 +52,10 @@ const TableComponenent: React.FC<Props> = ({ columns, filteredRows, rows }) => {
 					<TableBody>
 						{filteredRows
 							.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-							.map((row) => {
+							.map((row: any) => {
 								return (
 									<TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
-										{columns.map((column) => {
+										{columns.map((column: any) => {
 											const value = row[column.id];
 											return (
 												<TableCell key={column.id} align={column.align}>

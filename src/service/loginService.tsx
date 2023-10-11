@@ -1,4 +1,4 @@
-import instance from "@/config/instance";
+import { instance } from "@/config/instance";
 import { loginInterface } from "@/interface/interfaces";
 
 type MyHandler = (message: string) => void;
